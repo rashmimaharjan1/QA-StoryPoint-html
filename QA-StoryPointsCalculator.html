@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QA Time Estimator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>QA Time Estimator</h2>
+    <form id="qaEstimatorForm">
+        <label for="devHours">Development Time (in hours):</label>
+        <input type="number" id="devHours" name="devHours" min="0">
+        
+        <label for="devDays">Development Time (in days):</label>
+        <input type="number" id="devDays" name="devDays" min="0">
+        
+        <button type="button" onclick="calculateQATime()">Calculate QA Time</button>
+        
+        <div class="result" id="qaTimeResult"></div>
+    </form>
+</div>
+
+<script>
+    function calculateQATime() {
+        const devHours = parseFloat(document.getElementById('devHours').value) || 0;
+        const devDays = parseFloat(document.getElementById('devDays').value) || 0;
+
+        let devTime = 0;
+        let timeUnit = '';
+
+        // Prioritize hours if provided, otherwise use days
+        if (devHours > 0) {
+            devTime = devHours;
+            timeUnit = 'hours';
+        } else if (devDays > 0) {
+            devTime = devDays;
+            timeUnit = 'days';
+        } else {
+            document.getElementById('qaTimeResult').innerHTML = `<p>Please provide either hours or days for development time.</p>`;
+            return;
+        }
+        
+        // Percentage-based QA time estimation
+        const simpleQA = devTime * 0.3; // 30% for simple tasks
+        const mediumQA = devTime * 0.5; // 50% for medium complexity tasks
+        const complexQA = devTime * 0.8; // 80% for complex tasks
+        
+        // Average of the different approaches
+        const averageQATime = (simpleQA + mediumQA + complexQA) / 3;
+        
+        // Display the result
+        document.getElementById('qaTimeResult').innerHTML = `
+            <p><strong>Estimated QA Time (${timeUnit}):</strong></p>
+            <p>Simple Task: ${simpleQA.toFixed(2)} ${timeUnit}</p>
+            <p>Medium Complexity Task: ${mediumQA.toFixed(2)} ${timeUnit}</p>
+            <p>Complex Task: ${complexQA.toFixed(2)} ${timeUnit}</p>
+            <p><strong>Average QA Time:</strong> ${averageQATime.toFixed(2)} ${timeUnit}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>
